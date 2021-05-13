@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${APP_NAME}
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      run: ${APP_NAME}
+  template:
+    metadata:
+      labels:
+        run: ${APP_NAME}
+    spec:
+      containers:
+        - image: gcr.io/${GOOGLE_CLOUD_PROJECT}/${APP_NAME}:v${APP_VERSION}
+          name: ${APP_NAME}
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: BIGQUERY_TABLE
+              value: ${BIGQUERY_TABLE}
+          command: [ "/bin/sh", "-c" ]
+          args:
+            - echo Hello World;
+              echo "$GCLOUD_AUTH" | base64 --decode > "$HOME"/gcloud.json;
+              sh -c "gcloud auth activate-service-account --key-file=$HOME/gcloud.json $*";
