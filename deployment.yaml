@@ -12,17 +12,24 @@ spec:
       labels:
         run: ${APP_NAME}
     spec:
+      volumes:
+        - name: google-cloud-key
+          secret:
+            secretName: credentials
       containers:
         - image: gcr.io/${GOOGLE_CLOUD_PROJECT}/${APP_NAME}:v${APP_VERSION}
           name: ${APP_NAME}
+          volumeMounts:
+          - name: google-cloud-key
+            mountPath: /var/secrets/google
           ports:
             - containerPort: 8080
               protocol: TCP
           env:
             - name: BIGQUERY_TABLE
               value: ${BIGQUERY_TABLE}
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /var/secrets/google/credentials.json
           command: [ "/bin/sh", "-c" ]
           args:
             - echo Hello World;
-              echo "$GCLOUD_AUTH" | base64 --decode > "$HOME"/gcloud.json;
-              sh -c "gcloud auth activate-service-account --key-file=$HOME/gcloud.json $*";
