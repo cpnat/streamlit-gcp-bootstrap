@@ -1,4 +1,3 @@
-FROM docker:17.12.0-ce as static-docker-source
 FROM python:3.7.8-slim
 
 EXPOSE 8080

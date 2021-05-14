@@ -30,6 +30,3 @@ spec:
               value: ${BIGQUERY_TABLE}
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: /var/secrets/google/credentials.json
-          command: [ "/bin/sh", "-c" ]
-          args:
-            - echo Hello World;

@@ -42,7 +42,7 @@ gcloud-ssl-certificate:
 
 	@gcloud container clusters get-credentials ${CLUSTER_NAME}
 
-	@kubectl apply -f certificate.yaml
+	@cat certificate.yaml | envsubst '$${APP_NAME} $${DOMAIN_NAME}' | kubectl apply -f
 
 gcloud-deploy:
 	@gcloud config set project ${GOOGLE_CLOUD_PROJECT}
@@ -62,7 +62,7 @@ gcloud-deploy:
 	@cat deployment.yaml | envsubst '$${APP_NAME} $${BIGQUERY_TABLE} $${GOOGLE_CLOUD_PROJECT} $${APP_VERSION}' | kubectl apply -f -
 	@cat service.yaml | envsubst '$${APP_NAME}' | kubectl apply -f -
 
-	# just used for testing
+	@# just used for testing
 	@if [ -z '$${DOMAIN_NAME}' ] ;\
-		then cat ingress.yaml | envsubst '$${APP_NAME}' | kubectl apply -f - ;\
+		then cat ingress-test.yaml | envsubst '$${APP_NAME}' | kubectl apply -f - ;\
 		else cat ingress.yaml| envsubst '$${APP_NAME}' | kubectl apply -f -; fi
