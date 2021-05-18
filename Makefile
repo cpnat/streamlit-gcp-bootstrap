@@ -5,9 +5,11 @@ help:
 	@echo - run
 	@echo - run-container
 	@echo - gloud-set-project
+	@echo - gcloud-get-cluster-credentials
 	@echo - gloud-create-cluster
 	@echo - gcloud-server-ip
 	@echo - gcloud-ssl-certificte
+	@echo - gcloud-service-account-secret
 	@echo - gcloud-deploy
 
 run:
@@ -21,6 +23,9 @@ run-container:
 		-e GOOGLE_APPLICATION_CREDENTIALS=/tmp/keys/adc.json \
 		-v ${GOOGLE_APPLICATION_CREDENTIALS}:/tmp/keys/adc.json:ro \
 		${APP_NAME}
+
+gcloud-local-auth:
+	@gcloud auth login
 
 gcloud-set-project:
 	@gcloud config set project ${GOOGLE_CLOUD_PROJECT}
@@ -41,6 +46,10 @@ gcloud-reserve-ip: gcloud-set-project
 gcloud-ssl-certificate: gcloud-set-project gcloud-get-cluster-credentials
 	@cat certificate.yaml | envsubst '$${APP_NAME} $${DOMAIN_NAME}' | kubectl apply -f
 
+gcloud-service-account-secret: gcloud-set-project gcloud-get-cluster-credentials
+	@kubectl delete secret credentials || true
+	@kubectl create secret generic credentials --from-file=credentials.json=${SERVICE_ACCOUNT_KEY}
+
 gcloud-deploy: gcloud-set-project gcloud-get-cluster-credentials
 	@docker build -t gcr.io/${GOOGLE_CLOUD_PROJECT}/${APP_NAME}:v${APP_VERSION} .
 	@docker push gcr.io/${GOOGLE_CLOUD_PROJECT}/${APP_NAME}:v${APP_VERSION}
@@ -48,9 +57,7 @@ gcloud-deploy: gcloud-set-project gcloud-get-cluster-credentials
 	@kubectl delete deployment ${APP_NAME}|| true
 	@kubectl delete service ${APP_NAME} || true
 	@kubectl delete ingress ${APP_NAME} || true
-	@kubectl delete secret credentials || true
 
-	@kubectl create secret generic credentials --from-file=credentials.json=${SERVICE_ACCOUNT_KEY}
 	@cat deployment.yaml | envsubst '$${APP_NAME} $${BIGQUERY_TABLE} $${GOOGLE_CLOUD_PROJECT} $${APP_VERSION}' | kubectl apply -f -
 	@cat service.yaml | envsubst '$${APP_NAME}' | kubectl apply -f -
 
@@ -58,3 +65,6 @@ gcloud-deploy: gcloud-set-project gcloud-get-cluster-credentials
 	@if [ -z '$${DOMAIN_NAME}' ] ;\
 		then cat ingress-test.yaml | envsubst '$${APP_NAME}' | kubectl apply -f - ;\
 		else cat ingress.yaml| envsubst '$${APP_NAME}' | kubectl apply -f -; fi
+
+
+
