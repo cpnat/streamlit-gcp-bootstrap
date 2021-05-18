@@ -4,6 +4,7 @@ help:
 	@echo Make goals
 	@echo - run
 	@echo - run-container
+	@echo - gloud-set-project
 	@echo - gloud-create-cluster
 	@echo - gcloud-server-ip
 	@echo - gcloud-ssl-certificte
@@ -21,37 +22,28 @@ run-container:
 		-v ${GOOGLE_APPLICATION_CREDENTIALS}:/tmp/keys/adc.json:ro \
 		${APP_NAME}
 
-gcloud-create-cluster:
+gcloud-set-project:
 	@gcloud config set project ${GOOGLE_CLOUD_PROJECT}
 	@gcloud config set compute/zone ${GOOGLE_CLOUD_ZONE}
 
+gcloud-get-cluster-credentials:
+	@gcloud container clusters get-credentials ${CLUSTER_NAME}
+
+gcloud-create-cluster: gcloud-set-project
 	@gcloud container clusters create ${CLUSTER_NAME} --num-nodes=1 --labels google-kubernetes-engine=streamlit
 
-gcloud-reserve-ip:
-	@gcloud config set project ${GOOGLE_CLOUD_PROJECT}
-	@gcloud config set compute/zone ${GOOGLE_CLOUD_ZONE}
-
+gcloud-reserve-ip: gcloud-set-project
 	@gcloud compute addresses create ${APP_NAME} --global
 	@gcloud compute addresses describe ${APP_NAME} --global
 
 	@echo Create an A-Record in you DNS
 
-gcloud-ssl-certificate:
-	@gcloud config set project ${GOOGLE_CLOUD_PROJECT}
-	@gcloud config set compute/zone ${GOOGLE_CLOUD_ZONE}
-
-	@gcloud container clusters get-credentials ${CLUSTER_NAME}
-
+gcloud-ssl-certificate: gcloud-set-project gcloud-get-cluster-credentials
 	@cat certificate.yaml | envsubst '$${APP_NAME} $${DOMAIN_NAME}' | kubectl apply -f
 
-gcloud-deploy:
-	@gcloud config set project ${GOOGLE_CLOUD_PROJECT}
-	@gcloud config set compute/zone ${GOOGLE_CLOUD_ZONE}
-
+gcloud-deploy: gcloud-set-project gcloud-get-cluster-credentials
 	@docker build -t gcr.io/${GOOGLE_CLOUD_PROJECT}/${APP_NAME}:v${APP_VERSION} .
 	@docker push gcr.io/${GOOGLE_CLOUD_PROJECT}/${APP_NAME}:v${APP_VERSION}
-
-	@gcloud container clusters get-credentials ${CLUSTER_NAME}
 
 	@kubectl delete deployment ${APP_NAME}|| true
 	@kubectl delete service ${APP_NAME} || true
