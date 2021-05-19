@@ -48,7 +48,7 @@ Build out your application within `app.py` and use the following Make goals for 
 
 8 - Deploy the application to your cluster `make gcloud-deploy`
 
-9 - Setup Identity Aware Proxy https://cloud.google.com/iap/docs/enabling-kubernetes-howto (OAuth Consent, and Setting Up IAP access)
+9 - Setup Identity Aware Proxy https://cloud.google.com/iap/docs/enabling-kubernetes-howto (OAuth Consent, and Setting Up IAP access). Note, some default firewall rules may also need to be disabled.
 
 ### Subsequent deployment
 
