@@ -35,7 +35,7 @@ gcloud-get-cluster-credentials: gcloud-set-project
 	@gcloud container clusters get-credentials ${CLUSTER_NAME}
 
 gcloud-create-cluster: gcloud-set-project
-	@gcloud container clusters create ${CLUSTER_NAME} --num-nodes=1 --labels google-kubernetes-engine=streamlit
+	@gcloud container clusters create ${CLUSTER_NAME} --num-nodes=1  --enable-autoscaling --labels google-kubernetes-engine=streamlit
 
 gcloud-reserve-ip: gcloud-set-project
 	@gcloud compute addresses create ${APP_NAME} --global
