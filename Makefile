@@ -37,7 +37,7 @@ gcloud-get-cluster-credentials: gcloud-set-project
 gcloud-create-cluster: gcloud-set-project
 	@gcloud container clusters create ${CLUSTER_NAME} --num-nodes=1 --max-nodes=10  --enable-autoscaling --labels google-kubernetes-engine=streamlit
 
-gcloud-reserve-ip: gcloud-set-project ${APP_NAME}
+gcloud-reserve-ip: gcloud-set-project
 	@gcloud compute addresses delete ${APP_NAME}|| true
 	@gcloud compute addresses create ${APP_NAME} --global
 	@gcloud compute addresses describe ${APP_NAME} --global
