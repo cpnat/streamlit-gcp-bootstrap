@@ -4,14 +4,15 @@ Bootstrap https://streamlit.io/ deployments on Google Cloud Platform
 
 Build out your application within `app.py` and use the following Make goals for local run and deployment to Google Cloud Platform:-
 
-| Make goal              | Description                                                                                                                                                                                         |
-|------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| run                    | Runs your streamlit application locally; as a pre-requisite activate a virtualenv and `pip install -r requirements.txt`                                                                             |
-| run-container          | Builds and runs a Docker container locally                                                                                                                                                          |
-| gcloud-create-cluster  | Creates a Google Kubernetes Engine cluster, used to deploy your application. You can also use an existing cluster.                                                                                  |
-| gcloud-static-ip       | Creates a static IP record, a dependency for setting up HTTPS Ingress and Identity Aware Proxy. The A record must be added to your DNS before executing `gloud-deploy` and `gcloud-ssl-certificate` |
-| gcloud-ssl-certificate | Registers and associated an SSL certificate with your Ingress                                                                                                                                   |
-| gcloud-deploy          | Builds a container on Google Container Registry, and creates the Deployment, Service and Ingress for your application                                                                               |
+| Make goal                     | Description                                                                                                                                                                                         |
+|-------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| run                           | Runs your streamlit application locally; as a pre-requisite activate a virtualenv and `pip install -r requirements.txt`                                                                             |
+| run-container                 | Builds and runs a Docker container locally                                                                                                                                                          |
+| gcloud-create-cluster         | Creates a Google Kubernetes Engine cluster, used to deploy your application. You can also use an existing cluster.                                                                                  |
+| gcloud-static-ip              | Creates a static IP record, a dependency for setting up HTTPS Ingress and Identity Aware Proxy. The A record must be added to your DNS before executing `gloud-deploy` and `gcloud-ssl-certificate` |
+| gcloud-ssl-certificate        | Registers and associated an SSL certificate with your Ingress                                                                                                                                       |
+| gcloud-service-account-secret | Uploads a local service account key to your cluster, stored as a K8S secret. Add relevant scopes to access your data                                                                                |
+| gcloud-deploy                 | Builds a container on Google Container Registry, and creates the Deployment, Service and Ingress for your application                                                                               |
 
 ### Local run
 
