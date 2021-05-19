@@ -38,8 +38,7 @@ gcloud-create-cluster: gcloud-set-project
 	@gcloud container clusters create ${CLUSTER_NAME} --num-nodes=1 --max-nodes=10  --enable-autoscaling --labels google-kubernetes-engine=streamlit
 
 gcloud-reserve-ip: gcloud-set-project ${APP_NAME}
-	@gclouud compute addresses delete ${APP_NAME}|| true
-
+	@gcloud compute addresses delete ${APP_NAME}|| true
 	@gcloud compute addresses create ${APP_NAME} --global
 	@gcloud compute addresses describe ${APP_NAME} --global
 
@@ -47,7 +46,6 @@ gcloud-reserve-ip: gcloud-set-project ${APP_NAME}
 
 gcloud-ssl-certificate: gcloud-get-cluster-credentials
 	@kubectl delete certificate ${APP_NAME}|| true
-
 	@cat certificate.yaml | envsubst '$${APP_NAME} $${DOMAIN_NAME}' | kubectl apply -f -
 
 gcloud-service-account-secret: gcloud-get-cluster-credentials
@@ -61,7 +59,6 @@ gcloud-deploy: gcloud-get-cluster-credentials
 	@kubectl delete deployment ${APP_NAME}|| true
 	@kubectl delete service ${APP_NAME} || true
 	@kubectl delete ingress ${APP_NAME} || true
-
 	@cat deployment.yaml | envsubst '$${APP_NAME} $${BIGQUERY_TABLE} $${GOOGLE_CLOUD_PROJECT} $${APP_VERSION}' | kubectl apply -f -
 	@cat service.yaml | envsubst '$${APP_NAME}' | kubectl apply -f -
 	@cat ingress.yaml | envsubst '$${APP_NAME}' | kubectl apply -f -
