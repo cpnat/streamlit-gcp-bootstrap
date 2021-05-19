@@ -6,8 +6,8 @@ help:
 	@echo - run-container
 	@echo - gloud-set-project
 	@echo - gcloud-get-cluster-credentials
-	@echo - gloud-create-cluster
-	@echo - gcloud-server-ip
+	@echo - gcloud-create-cluster
+	@echo - gcloud-reserve-ip
 	@echo - gcloud-ssl-certificte
 	@echo - gcloud-service-account-secret
 	@echo - gcloud-deploy
@@ -35,15 +35,19 @@ gcloud-get-cluster-credentials: gcloud-set-project
 	@gcloud container clusters get-credentials ${CLUSTER_NAME}
 
 gcloud-create-cluster: gcloud-set-project
-	@gcloud container clusters create ${CLUSTER_NAME} --num-nodes=1  --enable-autoscaling --labels google-kubernetes-engine=streamlit
+	@gcloud container clusters create ${CLUSTER_NAME} --num-nodes=1 --max-nodes=10  --enable-autoscaling --labels google-kubernetes-engine=streamlit
 
-gcloud-reserve-ip: gcloud-set-project
+gcloud-reserve-ip: gcloud-set-project ${APP_NAME}
+	@gclouud compute addresses delete ${APP_NAME}|| true
+
 	@gcloud compute addresses create ${APP_NAME} --global
 	@gcloud compute addresses describe ${APP_NAME} --global
 
 	@echo Create an A-Record in you DNS
 
 gcloud-ssl-certificate: gcloud-get-cluster-credentials
+	@kubectl delete certificate ${APP_NAME}|| true
+
 	@cat certificate.yaml | envsubst '$${APP_NAME} $${DOMAIN_NAME}' | kubectl apply -f -
 
 gcloud-service-account-secret: gcloud-get-cluster-credentials
