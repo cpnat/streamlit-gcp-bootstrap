@@ -1,8 +1,0 @@
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
-  name: ${APP_NAME}
-spec:
-  backend:
-    serviceName: ${APP_NAME}
-    servicePort: 8080
