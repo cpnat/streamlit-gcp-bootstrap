@@ -4,6 +4,7 @@ help:
 	@echo Make goals
 	@echo - run
 	@echo - run-container
+	@echo - gcloud-local-auth
 	@echo - gloud-set-project
 	@echo - gcloud-get-cluster-credentials
 	@echo - gcloud-create-cluster
@@ -41,7 +42,6 @@ gcloud-reserve-ip: gcloud-set-project
 	@gcloud compute addresses delete ${APP_NAME}|| true
 	@gcloud compute addresses create ${APP_NAME} --global
 	@gcloud compute addresses describe ${APP_NAME} --global
-
 	@echo Create an A-Record in you DNS
 
 gcloud-ssl-certificate: gcloud-get-cluster-credentials
