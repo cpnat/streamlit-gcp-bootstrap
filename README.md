@@ -79,7 +79,7 @@ make gcloud-deploy
 
 ### Merging this bootstrap code with an existing branch
 
-In case you already have a repository for an existing application, you can merge this repository using the following commands:-
+In case you already have a repository with an existing application, you can merge the boostrap code using the following commands:-
 
 -   Create a branch in your existing repository  
 ```
@@ -93,5 +93,5 @@ git remote update
 ```
  - Merge the master branch from the new remote  
 ```
-git merge streamli-gcp-boostrap/master
+git merge streamlit-gcp-boostrap/master
 ```
