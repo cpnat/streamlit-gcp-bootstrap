@@ -1,7 +1,12 @@
+include ./config/.env
+export
+
 .DEFAULT_GOAL := help
+
 
 help:
 	@echo Make goals
+	@echo - set-environment-variables
 	@echo - run
 	@echo - run-container
 	@echo - gcloud-local-auth
@@ -14,7 +19,7 @@ help:
 	@echo - gcloud-deploy
 
 run:
-	@streamlit run app.py --server.port=8080 --server.address=0.0.0.0
+	@streamlit run app/app.py --server.port=8080 --server.address=0.0.0.0
 
 run-container:
 	@docker build . -t ${APP_NAME}
@@ -46,7 +51,7 @@ gcloud-reserve-ip: gcloud-set-project
 
 gcloud-ssl-certificate: gcloud-get-cluster-credentials
 	@kubectl delete certificate ${APP_NAME}|| true
-	@cat certificate.yaml | envsubst '$${APP_NAME} $${DOMAIN_NAME}' | kubectl apply -f -
+	@cat /config/certificate.yaml | envsubst '$${APP_NAME} $${DOMAIN_NAME}' | kubectl apply -f -
 
 gcloud-service-account-secret: gcloud-get-cluster-credentials
 	@kubectl delete secret credentials || true
@@ -59,6 +64,6 @@ gcloud-deploy: gcloud-get-cluster-credentials
 	@kubectl delete deployment ${APP_NAME}|| true
 	@kubectl delete service ${APP_NAME} || true
 	@kubectl delete ingress ${APP_NAME} || true
-	@cat deployment.yaml | envsubst '$${APP_NAME} $${BIGQUERY_TABLE} $${GOOGLE_CLOUD_PROJECT} $${APP_VERSION}' | kubectl apply -f -
-	@cat service.yaml | envsubst '$${APP_NAME}' | kubectl apply -f -
-	@cat ingress.yaml | envsubst '$${APP_NAME}' | kubectl apply -f -
+	@cat /config/deployment.yaml | envsubst '$${APP_NAME} $${BIGQUERY_TABLE} $${GOOGLE_CLOUD_PROJECT} $${APP_VERSION}' | kubectl apply -f -
+	@cat /config/service.yaml | envsubst '$${APP_NAME}' | kubectl apply -f -
+	@cat /config/ingress.yaml | envsubst '$${APP_NAME}' | kubectl apply -f -

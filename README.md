@@ -2,31 +2,19 @@ Bootstrap https://streamlit.io/ deployments on Google Cloud Platform
 
 ![Streamlit Logo](streamlit-logo-primary-colormark-darktext.png)
 
-Build out your application within `app.py` and use the following Make goals for local run and deployment to Google Cloud Platform:-
+Build out your application within `app.py` and following the instructions below for local run, and deployment on Google Cloud Platform:
 
-| Make goal                     | Description                                                                                                                                                                                         |
-|-------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| run                           | Runs your streamlit application locally; as a pre-requisite activate a virtualenv and `pip install -r requirements.txt`                                                                             |
-| run-container                 | Builds and runs a Docker container locally                                                                                                                                                          |
-| gcloud-create-cluster         | Creates a Google Kubernetes Engine cluster, used to deploy your application. You can also use an existing cluster.                                                                                  |
-| gcloud-static-ip              | Creates a static IP record, a dependency for setting up HTTPS Ingress and Identity Aware Proxy. The A record must be added to your DNS before executing `gloud-deploy` and `gcloud-ssl-certificate` |
-| gcloud-ssl-certificate        | Registers and associated an SSL certificate with your Ingress                                                                                                                                       |
-| gcloud-service-account-secret | Uploads a local service account key to your cluster, stored as a K8S secret. Add relevant scopes to access your data                                                                                |
-| gcloud-deploy                 | Builds a container on Google Container Registry, and creates the Deployment, Service and Ingress for your application                                                                               |
+### Pre-requisites
 
-### Local run
+0.1 - Authenticate your local machine 
+```
+make gcloud-local-auth
+```
 
-`run` and `run-container`facilitate running your application locally
+0.1 - Create an Service Acccount, with permissions to access your Bigquery project and download a JSON key file
 
-### Initial Deployment
 
-1 - Create an Service Acccount, with permissions to access your Bigquery project and download a JSON key file
-
-2 - Authenticate your local machine `make gcloud-local-auth`
-
-3 - Register a static IP address `make gcloud-static-ip` and then add an A-Record to your DNS
-
-4 - Setup environment variables; as below:-
+0.2 - Create `./config/.env` containing variables to be used by your deployment. See `./config/.env.example` for a sample using dummy values.
 
 | Environment variable           | Description                                                                                  |
 |--------------------------------|----------------------------------------------------------------------------------------------|
@@ -40,16 +28,70 @@ Build out your application within `app.py` and use the following Make goals for 
 | SERVICE_ACCOUNT_KEY            | Path to service account key, required for access to Bigquery                                 |
 | DOMAIN_NAME                    | The domain name that you will point to the IP address associated with your Ingress           |
 
-5 - Create a Kubernetes cluster if required using `make gcloud-create-cluster`
 
-6 - Register an SSL certificate `make gcloud-ssl-certificate`
+### Local run
 
-7 - Upload your service account key to the cluster (managed using K8S Secrets) `make gcloud-service-account-secret`
+1.1 - To run your application locally (using a venv) or in a container, execute one of the following:-
+```
+make run
+```
 
-8 - Deploy the application to your cluster `make gcloud-deploy`
+```
+make run-container
+```
 
-9 - Setup Identity Aware Proxy https://cloud.google.com/iap/docs/enabling-kubernetes-howto (OAuth Consent, and Setting Up IAP access). Note, some default firewall rules may also need to be disabled.
+### Initial Deployment
+
+2.1 - Create a static IP record, a dependency for setting up HTTPS Ingress and Identity Aware Proxy. The A record must be added to your DNS before proceeding
+```
+make gcloud-static-ip
+```
+
+2.2 - Create a Google Kubernetes Engine cluster if required
+```
+make gcloud-create-cluster
+```
+
+2.3 - Register and associated an SSL certificate with your Ingress
+```
+make gcloud-ssl-certificate
+```
+
+2.4 - Upload your service account key to the cluster (managed using K8S Secrets) 
+```
+make gcloud-service-account-secret
+```
+
+2.5 - Build a container on Google Container Registry, and create the Deployment, Service and Ingress for your application 
+```
+make gcloud-deploy
+```
+
+2.6 - Setup Identity Aware Proxy https://cloud.google.com/iap/docs/enabling-kubernetes-howto (OAuth Consent, and Setting Up IAP access). Note, some default firewall rules may also need to be disabled.
 
 ### Subsequent deployment
 
-After initial setup, to re-reploy new versions of your application, simply run `make gcloud-deploy`
+After initial setup, to re-reploy new versions of your application, simply repeat step #2.5 
+
+```
+make gcloud-deploy
+```
+
+### Merging this bootstrap code with an existing branch
+
+In case you already have a repository for an existing application, you can merge this repository using the following commands:-
+
+-   Create a branch in your existing repository  
+```
+git checkout -b <my-branch>
+```
+
+- Add a secondary remote  
+```
+git remote add streamlit-gcp-bootstrap git@github.com:cpnat/streamlit-gcp-bootstrap.git
+git remote update
+```
+ - Merge the master branch from the new remote  
+```
+git merge streamli-gcp-boostrap/master
+```

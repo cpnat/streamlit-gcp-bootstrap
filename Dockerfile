@@ -8,7 +8,7 @@ COPY requirements.txt app/requirements.txt
 RUN pip install -r app/requirements.txt
 
 # Copy into a directory of its own (so it isn't in the toplevel dir)
-COPY . /app
+COPY app /app
 WORKDIR /app
 
 # Run it!
