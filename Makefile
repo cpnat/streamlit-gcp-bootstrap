@@ -6,7 +6,6 @@ export
 
 help:
 	@echo Make goals
-	@echo - set-environment-variables
 	@echo - run
 	@echo - run-container
 	@echo - gcloud-local-auth
