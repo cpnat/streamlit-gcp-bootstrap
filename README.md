@@ -23,7 +23,6 @@ Build out your application within `app.py` and following the instructions below 
 | SERVICE_ACCOUNT_KEY            | Path to service account key, required for access to Bigquery                                 |
 | DOMAIN_NAME                    | The domain name that you will point to the IP address associated with your Ingress           |
 
-
 ## Local run
 
 1.1 - To run your application locally in a container:-
