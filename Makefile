@@ -18,11 +18,10 @@ help:
 
 clean:
 	rm -f -- gcloud-local-auth \
-	gcloud-get-cluster-credentials \
 	gcloud-create-cluster \
 	gcloud-reserve-ip \
 	gcloud-ssl-certificate \
-	gcloud-reserve-ip
+	gcloud-service-account-secret
 
 run:
 	@streamlit run app/app.py --server.port=8080 --server.address=0.0.0.0
