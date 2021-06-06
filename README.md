@@ -47,13 +47,16 @@ make gcloud-create-cluster
 ```
 
 2.3 - Deploy your application, this encompasses the following stages:-
-- Register and associated an SSL certificate with your Ingress  
-- Uploads your service account key to the cluster (managed using K8S Secrets)  
-- Builds a container on Google Container Registry, and creates the Deployment, Service and Ingress for your application 
+- Register and associate an SSL certificate with your Ingress  
+- Upload your service account key to the cluster (managed using K8S Secrets)  
+- Build a container on Google Container Registry, and create the Deployment, Service and Ingress for your application 
 
 ```
 make gcloud-deploy
 ```
+
+2.4 - Setup Identity Aware Proxy https://cloud.google.com/iap/docs/enabling-kubernetes-howto (OAuth Consent, and Setting Up IAP access). Note, some default firewall rules may also need to be disabled.
+
 
 ## Re-deployment
 Simply re-run the command below; un-necessary stages from the initial deployment will not be repeated.
@@ -62,7 +65,6 @@ Simply re-run the command below; un-necessary stages from the initial deployment
 make gcloud-deploy
 ```
 
-2.4 - Setup Identity Aware Proxy https://cloud.google.com/iap/docs/enabling-kubernetes-howto (OAuth Consent, and Setting Up IAP access). Note, some default firewall rules may also need to be disabled.
 
 ## Clean
 Sentinel files are used to keep track of stages that only need to be run once. If you wish to start afresh run
