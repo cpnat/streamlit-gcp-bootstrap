@@ -44,19 +44,19 @@ gcloud-set-project: gcloud-local-auth
 	@gcloud config set project ${GOOGLE_CLOUD_PROJECT}
 	@gcloud config set compute/zone ${GOOGLE_CLOUD_ZONE}
 
-gcloud-get-cluster-credentials: gcloud-set-project
-	@gcloud container clusters get-credentials ${CLUSTER_NAME}
-
-gcloud-create-cluster: gcloud-set-project
-	@gcloud container clusters create ${CLUSTER_NAME} --num-nodes=1 --max-nodes=10  --enable-autoscaling --labels google-kubernetes-engine=streamlit
-	@touch $@
-
 gcloud-reserve-ip: gcloud-set-project
 	@gcloud compute addresses delete ${APP_NAME}|| true
 	@gcloud compute addresses create ${APP_NAME} --global
 	@gcloud compute addresses describe ${APP_NAME} --global
 	@echo Create an A-Record in you DNS
 	@touch $@
+
+gcloud-create-cluster: gcloud-set-project
+	@gcloud container clusters create ${CLUSTER_NAME} --num-nodes=1 --max-nodes=10  --enable-autoscaling --labels google-kubernetes-engine=streamlit
+	@touch $@
+
+gcloud-get-cluster-credentials: gcloud-set-project
+	@gcloud container clusters get-credentials ${CLUSTER_NAME}
 
 gcloud-ssl-certificate: gcloud-get-cluster-credentials
 	@kubectl delete certificate ${APP_NAME}|| true
