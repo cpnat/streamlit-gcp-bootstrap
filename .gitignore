@@ -131,7 +131,9 @@ dmypy.json
 
 # Sentinel files
 gcloud-local-auth
-gcloud-create-cluster
 gcloud-reserve-ip
+gcloud-create-cluster
 gcloud-ssl-certificate
+gcloud-service
+gcloud-ingress
 gcloud-service-account-secret

@@ -39,13 +39,8 @@ make run-container
 make gcloud-static-ip
 ```
 
-2.2 - Create a Google Kubernetes Engine cluster
-
-```
-make gcloud-create-cluster
-```
-
-2.3 - Deploy your application, this encompasses the following stages:-
+2.2 - Deploy your application, this encompasses the following stages:-
+- Create a GKE cluster
 - Register and associate an SSL certificate with your Ingress  
 - Upload your service account key to the cluster (managed using K8S Secrets)  
 - Build a container on Google Container Registry, and create the Deployment, Service and Ingress for your application 
@@ -54,7 +49,7 @@ make gcloud-create-cluster
 make gcloud-deploy
 ```
 
-2.4 - Setup Identity Aware Proxy https://cloud.google.com/iap/docs/enabling-kubernetes-howto (OAuth Consent, and Setting Up IAP access). Note, some default firewall rules may also need to be disabled.
+2.3 - Setup Identity Aware Proxy https://cloud.google.com/iap/docs/enabling-kubernetes-howto (OAuth Consent, and Setting Up IAP access). Note, some default firewall rules may also need to be disabled.
 
 
 ## Re-deployment
@@ -66,10 +61,16 @@ make gcloud-deploy
 
 
 ## Clean
-Sentinel files are used to keep track of stages that only need to be run once. If you wish to start afresh run
+Sentinel files are used to keep track of stages that only need to be run once. If you wish to re-run a stage, you can remove the relevant file:-
 
 ```
-make clean
+gcloud-local-auth
+gcloud-reserve-ip
+gcloud-create-cluster
+gcloud-ssl-certificate
+gcloud-service
+gcloud-ingress
+gcloud-service-account-secret
 ```
 
 ## Merging this bootstrap code with an existing branch
