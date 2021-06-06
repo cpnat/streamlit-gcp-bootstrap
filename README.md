@@ -4,7 +4,7 @@ Bootstrap https://streamlit.io/ deployments on Google Cloud Platform
 
 Build out your application within `app.py` and following the instructions below for local run, and deployment on Google Cloud Platform:
 
-### Pre-requisites
+## Pre-requisites
 
 0.1 - Install Docker Desktop (https://www.docker.com/products/docker-desktop) and Google Cloud SDK (https://cloud.google.com/sdk) on your machine
 
@@ -24,7 +24,7 @@ Build out your application within `app.py` and following the instructions below 
 | DOMAIN_NAME                    | The domain name that you will point to the IP address associated with your Ingress           |
 
 
-### Local run
+## Local run
 
 1.1 - To run your application locally in a container:-
 
@@ -32,14 +32,16 @@ Build out your application within `app.py` and following the instructions below 
 make run-container
 ```
 
-### Initial Deployment
+## Initial Deployment
 
 2.1 - Create a static IP record, a dependency for setting up HTTPS Ingress and Identity Aware Proxy. The A record must be added to your DNS before proceeding
+
 ```
 make gcloud-static-ip
 ```
 
 2.2 - Create a Google Kubernetes Engine cluster
+
 ```
 make gcloud-create-cluster
 ```
@@ -48,33 +50,46 @@ make gcloud-create-cluster
 - Register and associated an SSL certificate with your Ingress  
 - Uploads your service account key to the cluster (managed using K8S Secrets)  
 - Builds a container on Google Container Registry, and creates the Deployment, Service and Ingress for your application 
+
+```
+make gcloud-deploy
+```
+
+## Re-deployment
+Simply re-run the command below; un-necessary stages from the initial deployment will not be repeated.
+
 ```
 make gcloud-deploy
 ```
 
 2.4 - Setup Identity Aware Proxy https://cloud.google.com/iap/docs/enabling-kubernetes-howto (OAuth Consent, and Setting Up IAP access). Note, some default firewall rules may also need to be disabled.
 
-### Clean
+## Clean
 Sentinel files are used to keep track of stages that only need to be run once. If you wish to start afresh run
+
 ```
 make clean
 ```
 
-### Merging this bootstrap code with an existing branch
+## Merging this bootstrap code with an existing branch
 
 In case you already have a repository with an existing application, you can merge the boostrap code using the following commands:-
 
 -   Create a branch in your existing repository  
+
 ```
 git checkout -b <my-branch>
 ```
 
 - Add a secondary remote  
+
 ```
 git remote add streamlit-gcp-bootstrap git@github.com:cpnat/streamlit-gcp-bootstrap.git
 git remote update
 ```
+
  - Merge the master branch from the new remote  
+
 ```
 git merge streamlit-gcp-boostrap/master
 ```
