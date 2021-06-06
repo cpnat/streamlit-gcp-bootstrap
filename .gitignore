@@ -128,3 +128,11 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Sentinel files
+gcloud-local-auth
+gcloud-get-cluster-credentials
+gcloud-create-cluster
+gcloud-reserve-ip
+gcloud-ssl-certificate
+gcloud-reserve-ip
