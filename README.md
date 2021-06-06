@@ -26,7 +26,7 @@ Build out your application within `app.py` and following the instructions below 
 
 ### Local run
 
-1.1 - To run your application locally (using a venv) in a container:-
+1.1 - To run your application locally in a container:-
 
 ```
 make run-container
@@ -45,9 +45,9 @@ make gcloud-create-cluster
 ```
 
 2.3 - Deploy your application, this encompasses the following stages:-
-Register and associated an SSL certificate with your Ingress
-Uploads your service account key to the cluster (managed using K8S Secrets)
-Builds a container on Google Container Registry, and creates the Deployment, Service and Ingress for your application 
+- Register and associated an SSL certificate with your Ingress  
+- Uploads your service account key to the cluster (managed using K8S Secrets)  
+- Builds a container on Google Container Registry, and creates the Deployment, Service and Ingress for your application 
 ```
 make gcloud-deploy
 ```
