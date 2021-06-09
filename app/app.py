@@ -5,7 +5,7 @@ import os
 st.markdown("# Sample app")
 
 client = bigquery.Client(project=os.environ.get('GOOGLE_CLOUD_PROJECT'))
-query = 'SELECT * FROM `{}`'.format(os.environ.get('BIGQUERY_TABLE'))
+query = 'SELECT * FROM `bigquery-public-data.austin_bikeshare.bikeshare_stations`')
 df = client.query(query).to_dataframe()
 
 st.dataframe(df)

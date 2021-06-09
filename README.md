@@ -6,7 +6,7 @@ Build out your application within `app.py` and following the instructions below 
 
 ## Pre-requisites
 
-0.1 - Install Docker Desktop (https://www.docker.com/products/docker-desktop) and Google Cloud SDK (https://cloud.google.com/sdk) on your machine
+0.1 - Install Docker Desktop (https://www.docker.com/products/docker-desktop), Google Cloud SDK (https://cloud.google.com/sdk) and GNU Make (https://www.gnu.org/software/make/) on your machine
 
 0.2 - Create a Service Acccount, with permissions to access your Bigquery project and download a JSON key file
 

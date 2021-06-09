@@ -20,7 +20,6 @@ help:
 run-container:
 	@docker build . -t ${APP_NAME}
 	@docker run -p 8080:8080 \
-		-e BIGQUERY_TABLE=${BIGQUERY_TABLE} \
 		-e GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT} \
 		-e GOOGLE_APPLICATION_CREDENTIALS=/tmp/keys/adc.json \
 		-v ${SERVICE_ACCOUNT_KEY}:/tmp/keys/adc.json:ro \
@@ -91,4 +90,4 @@ gcloud-deploy: gcloud-create-cluster gcloud-get-cluster-credentials \
 	gcloud-ssl-certificate gcloud-service-account-secret gcloud-service gcloud-ingress
 
 	@kubectl delete deployment ${APP_NAME}|| true
-	@cat ./config/deployment.yaml | envsubst '$${APP_NAME} $${BIGQUERY_TABLE} $${GOOGLE_CLOUD_PROJECT} $${APP_VERSION}' | kubectl apply -f -
+	@cat ./config/deployment.yaml | envsubst '$${APP_NAME} $${GOOGLE_CLOUD_PROJECT} $${APP_VERSION}' | kubectl apply -f -
